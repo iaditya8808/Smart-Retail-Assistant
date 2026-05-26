@@ -1,6 +1,15 @@
+
+try:
+    __import__("pysqlite3")
+    import sys
+    sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+except Exception:
+    pass
+
 import logging
 import os
 import sys
+
 from typing import List, Optional
 
 import joblib
