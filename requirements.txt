@@ -1,5 +1,5 @@
 fastapi==0.115.0
-uvicorn==0.30.6
+uvicorn[standard]==0.30.6
 gunicorn==22.0.0
 
 pydantic==2.8.2
@@ -16,7 +16,7 @@ numpy==1.26.4
 pandas==2.2.2
 scikit-learn==1.5.1
 joblib==1.4.2
- 
+
 openai==1.43.0
 tiktoken==0.7.0
 
@@ -29,5 +29,6 @@ langchain-chroma==0.1.4
 chromadb==0.5.3
 
 azure-ai-documentintelligence==1.0.0
+azure-core==1.30.2
 
 pysqlite3-binary; platform_system!="Windows"
