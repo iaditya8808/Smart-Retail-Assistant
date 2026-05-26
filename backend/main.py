@@ -1,11 +1,13 @@
 import sys
 
-try:
-    if sys.platform != "win32":
-        import pysqlite3
-        sys.modules["sqlite3"] = pysqlite3
-except Exception:
-    pass
+if sys.platform != "win32":
+    try:
+        __import__("pysqlite3")
+        sys.modules["sqlite3"] = sys.modules.pop("pysqlite3")
+    except Exception as e:
+        print("SQLite patch failed:", e)
+
+
 
 import logging
 import os
