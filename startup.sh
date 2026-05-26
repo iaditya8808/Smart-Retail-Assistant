@@ -1,3 +1,3 @@
 #!/bin/bash
 
-gunicorn --bind=0.0.0.0 --timeout 600 --worker-class uvicorn.workers.UvicornWorker backend.main:app
+exec python -m uvicorn backend.main:app --host 0.0.0.0 --port "${PORT:-8000}"

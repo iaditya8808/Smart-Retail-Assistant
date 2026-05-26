@@ -1,4 +1,6 @@
 {
-    "python.terminal.useEnvFile": true
+    "python.terminal.useEnvFile": true,
+    "appService.defaultWebAppToDeploy": "/subscriptions/7e5b9edd-8faf-4d2a-ac88-51e226268870/resourceGroups/Retail-rg/providers/Microsoft.Web/sites/smart-retail-assistant-publish",
+    "appService.deploySubpath": "."
 }
 
