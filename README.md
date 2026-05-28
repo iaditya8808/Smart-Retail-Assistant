@@ -1,82 +1,180 @@
-# Smart Retail Assistant
+#  Smart Retail Assistant
 
-Smart Retail Assistant is a FastAPI project for retail sales analysis. It combines a trained sales forecasting model, MongoDB-backed API endpoints, document search with RAG, and a small multi-agent layer for routing user questions.
+An AI-powered retail analytics platform that combines predictive modeling, intelligent document search, and multi-agent routing to deliver actionable business insights.
 
-## What It Does
+##  Features
 
-- Ingests retail sales records into MongoDB.
-- Predicts weekly sales using a saved scikit-learn model, with optional Azure ML endpoint inference.
-- Explains predictions with Azure OpenAI.
-- Searches retail PDF content through Azure OpenAI embeddings and ChromaDB.
-- Routes questions to a Data Analyst Agent, Document Agent, or ML Expert Agent.
-- Exposes a simple MCP tool layer for agent/tool communication.
+- **Sales Forecasting** – Predict weekly sales using trained scikit-learn models with Azure ML integration
+- **Multi-Agent System** – Route questions to specialized agents (Data Analyst, Document Expert, ML Specialist)
+- **Document Search** – Intelligent RAG-powered search over retail PDFs using Azure OpenAI embeddings
+- **Anomaly Detection** – Automatically detect unusual sales patterns
+- **MongoDB Integration** – Persistent storage of sales records and analysis results
+- **FastAPI** – High-performance REST API with automatic interactive docs
+- **MCP Tools** – Model Context Protocol layer for seamless agent-tool communication
 
-## Run Locally
+##  Quick Start
 
-Install dependencies:
+### Prerequisites
 
+- Python 3.11+
+- MongoDB (local or cloud)
+- Azure OpenAI (optional, for LLM features)
+- Azure ML (optional, for advanced inference)
+
+### Installation
+
+1. **Clone and navigate:**
+```bash
+cd Smart\ Retail\ Assistant
+```
+
+2. **Create virtual environment:**
+```bash
+python -m venv venv
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+```
+
+3. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-Start the API:
+4. **Set up environment variables** (see [Configuration](#configuration) below)
 
+5. **Run the API:**
 ```bash
 uvicorn backend.main:app --reload
 ```
 
-Open the API docs:
+6. **Explore the API:**
+Open http://localhost:8000/docs in your browser for interactive API documentation.
 
-```text
-http://localhost:8000/docs
-```
+##  API Endpoints
 
-## Main Endpoints
-
-| Endpoint | Method | Use |
-| --- | --- | --- |
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
 | `/` | GET | Health check |
-| `/data-ingestion` | POST | Add sales records |
-| `/sales-data` | GET | Read stored sales records |
-| `/predict` | POST | Predict sales |
-| `/search-documents` | POST | Search document chunks |
-| `/ask` | POST | Ask a direct LLM question |
-| `/multi-agent` | POST | Route a question to an agent |
-| `/detect-anomalies` | GET | Return anomaly detection results |
+| `/data-ingestion` | POST | Ingest sales records into MongoDB |
+| `/sales-data` | GET | Retrieve stored sales records |
+| `/predict` | POST | Forecast weekly sales |
+| `/search-documents` | POST | Search retail PDFs using RAG |
+| `/ask` | POST | Direct LLM question answering |
+| `/multi-agent` | POST | Route question to specialized agent |
+| `/detect-anomalies` | GET | Get anomaly detection results |
 
-## Project Layout
+##  Configuration
 
-```text
-backend/     FastAPI app and configuration
-agents/      Agent prompts, router, MCP tool registry, MCP server
-ml/          Preprocessing, training, and anomaly detection scripts
-rag/         PDF indexing and ChromaDB retriever
-data/        Retail dataset and generated outputs
-tests/       Pytest API and ML tests
-```
-
-## Configuration
-
-Create a local `.env` file with the services you use:
+Create a `.env` file in the project root with your service credentials:
 
 ```env
-MONGO_URI=your-mongodb-uri
+# MongoDB
+MONGO_URI=your-mongodb-connection-string
 
+# Azure OpenAI (for LLM and embeddings)
 AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
-AZURE_OPENAI_API_KEY=your-key
+AZURE_OPENAI_API_KEY=your-api-key
 AZURE_OPENAI_DEPLOYMENT=gpt-4o-mini
 AZURE_OPENAI_API_VERSION=2024-03-01-preview
 
-AZURE_ML_ENDPOINT=your-azure-ml-endpoint
-AZURE_ML_API_KEY=your-azure-ml-key
+# Azure ML (optional, for advanced inference)
+AZURE_ML_ENDPOINT=your-ml-endpoint
+AZURE_ML_API_KEY=your-ml-api-key
 ```
 
-Do not submit `.env` with real keys.
+ **Never commit `.env` with real credentials.** Add it to `.gitignore`.
 
-## Tests
+##  Project Structure
+
+```
+backend/          FastAPI application and configuration
+agents/           Multi-agent system, routing logic, and MCP tools
+ml/               Model training, preprocessing, anomaly detection
+rag/              PDF indexing, embeddings, and ChromaDB retriever
+data/             Retail datasets and analysis outputs
+tests/            Unit tests for API and ML components
+uploads/          Temporary storage for file uploads
+```
+
+##  Testing
+
+Run the test suite:
 
 ```bash
 pytest
 ```
 
-The tests cover the FastAPI routes and the basic ML workflow. Some runtime behavior still depends on local credentials and MongoDB availability.
+Tests cover API routes, ML workflows, and data processing. Some tests require live MongoDB and Azure credentials.
+
+##  Documentation
+
+- **[Deployment Architecture](DEPLOYMENT_ARCHITECTURE.md)** – System design and cloud topology
+- **[Manual Azure Deployment](MANUAL_AZURE_DEPLOYMENT.md)** – Step-by-step Azure App Service setup
+- **[MCP Setup Guide](MCP_SETUP.md)** – Model Context Protocol configuration
+- **[Testing Guide](TESTING.md)** – Detailed test instructions
+
+##  Technology Stack
+
+- **Framework:** FastAPI, Uvicorn
+- **AI/ML:** LangChain, scikit-learn, Azure OpenAI, pandas, numpy
+- **Database:** MongoDB
+- **Vector Search:** ChromaDB, Azure OpenAI Embeddings
+- **Document Processing:** Azure Document Intelligence
+- **Cloud:** Microsoft Azure (App Service, OpenAI, ML Services)
+- **Testing:** pytest
+
+##  Usage Examples
+
+### Predict Sales
+```python
+import requests
+
+response = requests.post(
+    "http://localhost:8000/predict",
+    json={"features": [100, 200, 300, 400]}
+)
+print(response.json())
+```
+
+### Search Documents
+```python
+response = requests.post(
+    "http://localhost:8000/search-documents",
+    json={"query": "holiday promotion impact"}
+)
+print(response.json())
+```
+
+### Ask Multi-Agent
+```python
+response = requests.post(
+    "http://localhost:8000/multi-agent",
+    json={"question": "What caused the sales spike in Q3?"}
+)
+print(response.json())
+```
+
+> **Tip:** Use the interactive API docs at http://localhost:8000/docs to test endpoints directly in your browser.
+
+##  Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Import errors | Ensure virtual environment is activated and `pip install -r requirements.txt` is run |
+| MongoDB connection fails | Verify `MONGO_URI` in `.env` and network connectivity |
+| Azure OpenAI errors | Check API key, endpoint, and deployment name in `.env` |
+| Port 8000 already in use | Change port: `uvicorn backend.main:app --port 8001` |
+
+##  License
+
+[Specify your license here]
+
+##  Contributing
+
+Contributions welcome! Please create a feature branch and submit a pull request.
+
+##  Support
+
+For issues and questions, please open an issue on this repository.
